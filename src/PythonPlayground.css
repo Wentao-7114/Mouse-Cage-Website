@@ -16,7 +16,7 @@
 .playground-heading h1 {
   max-width: 1000px;
   margin-bottom: 0;
-  font-size: clamp(2.25rem, 2.5vw, 4.5rem);
+  font-size:  clamp(1.75rem, 2.5vw, 2.7rem);
 }
 
 .runtime-status {

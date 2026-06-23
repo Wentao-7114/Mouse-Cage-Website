@@ -1,0 +1,86 @@
+.experience-view {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: 26px 0 70px;
+}
+
+.experience-heading {
+  width: 100%;
+  margin-bottom: 28px;
+  text-align: left;
+}
+
+.experience-heading h1 {
+  max-width: 100%;
+  margin-bottom: 0;
+  font-size: clamp(1.75rem, 2.5vw, 2.7rem);
+}
+
+.timeline-list {
+  display: grid;
+  gap: 16px;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 28px;
+  padding: 26px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  text-align: left;
+}
+
+.timeline-meta {
+  padding-top: 2px;
+}
+
+.timeline-meta span {
+  display: inline-flex;
+  margin-bottom: 10px;
+  color: var(--accent-strong);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.timeline-meta small {
+  display: block;
+  margin-top: 12px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.timeline-content h3 {
+  margin: 0 0 10px;
+  color: var(--text-h);
+  font-size: 1.08rem;
+}
+
+.timeline-content p {
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.timeline-content ul {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding-left: 18px;
+  color: var(--text);
+  line-height: 1.58;
+}
+
+.timeline-content li::marker {
+  color: var(--accent);
+}
+
+@media (max-width: 860px) {
+  .timeline-item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}

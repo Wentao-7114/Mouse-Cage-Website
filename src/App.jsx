@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react'
-import { FaGithub, FaLinkedin } from 'react-icons/fa'
+import { FaArrowRight, FaGithub, FaLinkedin } from 'react-icons/fa'
 import { MdEmail } from 'react-icons/md'
 import './App.css'
+import Exp from './Exp'
 import PythonPlayground from './PythonPlayground'
+import Project from './Project'
+import riceLogo from './assets/Rice_Logo.png'
+import uiucLogo from './assets/UIUC_Logo_1.png'
 
-const emailAddress = 'z2396491383@gmail.com'
+const emailAddress = 'wz67@rice.edu'
 const emailSubject = 'Portfolio Contact'
 const emailBody = 'Hi Wentao,%0D%0A%0D%0AI found your portfolio and wanted to contact you.'
 
@@ -12,34 +16,45 @@ const emailHref = `mailto:${emailAddress}?subject=${emailSubject}&body=${emailBo
 
 const skills = [
   {
-    title: 'Frontend Craft',
-    text: 'Responsive interfaces, polished details, and component-driven React experiences.',
+    title: 'Languages',
+    text: 'Python, C/C++, T-SQL, VBA, MySQL, TypeScript, JavaScript, HTML/CSS, Java.',
   },
   {
-    title: 'Problem Solving',
-    text: 'Clear thinking, practical tradeoffs, and steady progress from idea to implementation.',
+    title: 'Frameworks & Data',
+    text: 'React, Node.js/Express, MS SQL Server, SQL Server Integration Services.',
   },
   {
-    title: 'User Focus',
-    text: 'Simple flows, accessible structure, and products that feel calm to use.',
+    title: 'Developer Tools',
+    text: 'Git, MS Excel, Visual Studio, Docker, Google Cloud Platform, VS Code, PyCharm, IntelliJ.',
   },
 ]
 
-const projects = [
+const education = [
   {
-    title: 'Portfolio System',
-    tag: 'Design + React',
-    text: 'A refined personal homepage focused on clarity, structure, and lightweight performance.',
+    school: 'Rice University',
+    degree: 'Master of Computer Science',
+    location: 'Houston, TX',
+    date: 'Dec 2026',
+    logo: riceLogo,
+    logoAlt: 'Rice University logo',
+    status: 'Current graduate study',
+    theme: 'rice',
   },
   {
-    title: 'Product Dashboard',
-    tag: 'UI Architecture',
-    text: 'A clean dashboard concept with organized metrics, quick actions, and responsive layouts.',
-  },
-  {
-    title: 'Learning Lab',
-    tag: 'Experimentation',
-    text: 'Small technical experiments used to explore new patterns, tools, and interaction ideas.',
+    school: 'University of Illinois Urbana-Champaign',
+    degree: (
+      <>
+        Bachelor of Science in Computer Science (Honors),
+        <br />
+        Minor in Mathematics
+      </>
+    ),
+    location: 'Champaign, IL',
+    date: 'Dec 2024',
+    logo: uiucLogo,
+    logoAlt: 'University of Illinois Urbana-Champaign logo',
+    status: 'Undergraduate foundation',
+    theme: 'uiuc',
   },
 ]
 
@@ -66,23 +81,40 @@ function AbstractIllustration() {
   )
 }
 
-function SiteHeader({ currentView, onNavigateHome, onNavigateSection, onNavigatePlayground }) {
+function SiteHeader({
+  currentView,
+  onNavigateHome,
+  onNavigateContact,
+  onNavigateExperience,
+  onNavigatePlayground,
+  onNavigateProject,
+}) {
   return (
     <header className="site-header">
       <button className="brand" type="button" onClick={onNavigateHome} aria-label="Home">
-        <span className="brand-mark">P</span>
-        <span>Portfolio</span>
+        <span className="brand-mark">WZ</span>
+        <span>Wentao Zhang</span>
       </button>
       <nav className="nav-links" aria-label="Main navigation">
-        <button type="button" onClick={() => onNavigateSection('skills')}>
-          Skills
+        <button type="button" onClick={onNavigateHome}>
+          Home
         </button>
-        <button type="button" onClick={() => onNavigateSection('projects')}>
+         
+        <button
+          className={currentView === 'experience' ? 'active' : ''}
+          type="button"
+          onClick={onNavigateExperience}
+        >
+          Experience
+        </button>
+        <button
+          className={currentView === 'project' ? 'active' : ''}
+          type="button"
+          onClick={onNavigateProject}
+        >
           Projects
         </button>
-        <button type="button" onClick={() => onNavigateSection('contact')}>
-          Contact
-        </button>
+        
         <button
           className={currentView === 'playground' ? 'active' : ''}
           type="button"
@@ -90,8 +122,60 @@ function SiteHeader({ currentView, onNavigateHome, onNavigateSection, onNavigate
         >
           Playground
         </button>
+        <button type="button" onClick={onNavigateContact}>
+          Contact
+        </button>
       </nav>
     </header>
+  )
+}
+
+function ContactSection() {
+  return (
+    <section className="contact-section" id="contact" aria-labelledby="contact-title">
+      <div className="contact-copy">
+        <p className="contact-eyebrow">Let's connect</p>
+        <h2 id="contact-title">Let's build something impactful.</h2>
+        <p className="contact-text">
+          I'm open to software engineering and data engineering opportunities.
+        </p>
+         
+      </div>
+      <div className="contact-links" aria-label="Social links">
+        <a href={emailHref} target="_blank" rel="noreferrer">
+          <MdEmail aria-hidden="true" />
+          <span>Email</span>
+          <small aria-hidden="true">
+            <FaArrowRight />
+          </small>
+        </a>
+        <a href="https://github.com/Wentao-7114" target="_blank" rel="noreferrer">
+          <FaGithub aria-hidden="true" />
+          <span>GitHub</span>
+          <small aria-hidden="true">
+            <FaArrowRight />
+          </small>
+        </a>
+        <a href="https://www.linkedin.com/in/wentao-zhang-" target="_blank" rel="noreferrer">
+          <FaLinkedin aria-hidden="true" />
+          <span>LinkedIn</span>
+          <small aria-hidden="true">
+            <FaArrowRight />
+          </small>
+        </a>
+      </div>
+    </section>
+  )
+}
+
+function SiteFooter({ onBackToTop }) {
+  return (
+    <footer className="site-footer">
+      <span>Designed with clarity and care.</span>
+      <button type="button" onClick={onBackToTop}>
+        Back to top
+      </button>
+    </footer>
   )
 }
 
@@ -100,28 +184,53 @@ function PortfolioHome() {
     <>
       <section className="hero-section" id="home">
         <div className="hero-copy">
-          <p className="eyebrow">Personal Portfolio</p>
-          <h1>Thoughtful digital work with a clean, modern edge.</h1>
+          <p className="eyebrow">Wentao Zhang</p>
+          <h1>Computer science graduate student building reliable data systems and web products.</h1>
           <p className="hero-text">
-            I build focused web experiences that balance technical quality,
-            useful design, and a calm sense of organization.
+            I am a Master of Computer Science student at Rice University with hands-on
+            experience in SQL Server, ETL pipelines, React applications, and C++ systems.
           </p>
-          <div className="hero-actions" aria-label="Primary links">
-            <a className="button primary" href="#projects">
-              View Projects
-            </a>
-            <a className="button secondary" href={emailHref}>
-              Get in Touch
-            </a>
-          </div>
+           
         </div>
         <AbstractIllustration />
       </section>
 
+
+
+
+      <section className="section" id="education" aria-labelledby="education-title">
+        <div className="section-heading">
+          <p className="eyebrow">Education</p>
+          <h2 id="education-title">
+            Graduate CS student at Rice,  
+          </h2>
+          <h2 id="education-title">
+             with an honors CS foundation from UIUC.
+          </h2>
+        </div>
+        <div className="education-grid">
+          {education.map((item) => (
+            <article className={`education-card ${item.theme}`} key={item.school}>
+              <div className="education-logo-row">
+                <img src={item.logo} alt={item.logoAlt} />
+              </div>
+              <span className="education-date">{item.date}</span>
+              <h3>{item.school}</h3>
+              <p>{item.degree}</p>
+              <div className="education-card-footer">
+                <small>{item.location}</small>
+                <strong>{item.status}</strong>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+
       <section className="section" id="skills" aria-labelledby="skills-title">
         <div className="section-heading">
           <p className="eyebrow">Skills</p>
-          <h2 id="skills-title">A practical mix of design sense and technical execution.</h2>
+          <h2 id="skills-title">A practical stack across data engineering, software systems, and web development.</h2>
         </div>
         <div className="card-grid">
           {skills.map((skill) => (
@@ -134,54 +243,18 @@ function PortfolioHome() {
         </div>
       </section>
 
-      <section className="section" id="projects" aria-labelledby="projects-title">
-        <div className="section-heading">
-          <p className="eyebrow">Projects</p>
-          <h2 id="projects-title">Selected work shaped around clarity and momentum.</h2>
-        </div>
-        <div className="project-grid">
-          {projects.map((project) => (
-            <article className="project-card" key={project.title}>
-              <span>{project.tag}</span>
-              <h3>{project.title}</h3>
-              <p>{project.text}</p>
-              <a href="#contact">Discuss this style</a>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="contact-section" id="contact" aria-labelledby="contact-title">
-        <div>
-          <p className="eyebrow">Contact</p>
-          <h2 id="contact-title">Open to thoughtful projects and useful conversations.</h2>
-        </div>
-        <div className="contact-links" aria-label="Social links">
-          <a href={emailHref} target="_blank" rel="noreferrer">
-            <MdEmail aria-hidden="true" />
-            Email
-          </a>
-          <a href="https://github.com/Wentao-7114" target="_blank" rel="noreferrer">
-            <FaGithub aria-hidden="true" />
-            GitHub
-          </a>
-          <a href="https://www.linkedin.com/in/wentao-zhang-" target="_blank" rel="noreferrer">
-            <FaLinkedin aria-hidden="true" />
-            LinkedIn
-          </a>
-        </div>
-      </section>
-
-      <footer className="site-footer">
-        <span>Designed with clarity and care.</span>
-        <a href="#home">Back to top</a>
-      </footer>
+      
     </>
   )
 }
 
 function App() {
-  const getViewFromPath = () => (window.location.pathname === '/playground' ? 'playground' : 'home')
+  const getViewFromPath = () => {
+    if (window.location.pathname === '/experience') return 'experience'
+    if (window.location.pathname === '/playground') return 'playground'
+    if (window.location.pathname === '/project') return 'project'
+    return 'home'
+  }
   const [view, setView] = useState(getViewFromPath)
 
   useEffect(() => {
@@ -200,16 +273,20 @@ function App() {
     setView('home')
     window.history.pushState({}, '', '/')
     window.setTimeout(() => {
-      window.location.hash = 'home'
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }, 0)
   }
 
-  const navigateSection = (sectionId) => {
-    setView('home')
-    window.history.pushState({}, '', `/#${sectionId}`)
+  const navigateContact = () => {
+    window.history.pushState({}, '', `${window.location.pathname}#contact`)
     window.setTimeout(() => {
-      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
     }, 0)
+  }
+
+  const navigateTop = () => {
+    window.history.replaceState({}, '', window.location.pathname)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const navigatePlayground = () => {
@@ -218,15 +295,38 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const navigateExperience = () => {
+    setView('experience')
+    window.history.pushState({}, '', '/experience')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const navigateProject = () => {
+    setView('project')
+    window.history.pushState({}, '', '/project')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const renderView = () => {
+    if (view === 'experience') return <Exp />
+    if (view === 'project') return <Project />
+    if (view === 'playground') return <PythonPlayground />
+    return <PortfolioHome />
+  }
+
   return (
-    <main className="site-shell">
+    <main className="site-shell" id="top">
       <SiteHeader
         currentView={view}
         onNavigateHome={navigateHome}
-        onNavigateSection={navigateSection}
+        onNavigateContact={navigateContact}
+        onNavigateExperience={navigateExperience}
         onNavigatePlayground={navigatePlayground}
+        onNavigateProject={navigateProject}
       />
-      {view === 'playground' ? <PythonPlayground /> : <PortfolioHome />}
+      {renderView()}
+      <ContactSection />
+      <SiteFooter onBackToTop={navigateTop} />
     </main>
   )
 }
