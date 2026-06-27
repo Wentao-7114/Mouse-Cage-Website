@@ -5,6 +5,7 @@ import './App.css'
 import Exp from './Exp'
 import PythonPlayground from './PythonPlayground'
 import Project from './Project'
+import Resources from './Resources'
 import riceLogo from './assets/Rice_Logo.png'
 import uiucLogo from './assets/UIUC_Logo_1.png'
 
@@ -88,6 +89,7 @@ function SiteHeader({
   onNavigateExperience,
   onNavigatePlayground,
   onNavigateProject,
+  onNavigateResources,
 }) {
   return (
     <header className="site-header">
@@ -121,6 +123,13 @@ function SiteHeader({
           onClick={onNavigatePlayground}
         >
           Playground
+        </button>
+        <button
+          className={currentView === 'resources' ? 'active' : ''}
+          type="button"
+          onClick={onNavigateResources}
+        >
+          Resources
         </button>
         <button type="button" onClick={onNavigateContact}>
           Contact
@@ -253,6 +262,7 @@ function App() {
     if (window.location.pathname === '/experience') return 'experience'
     if (window.location.pathname === '/playground') return 'playground'
     if (window.location.pathname === '/project') return 'project'
+    if (window.location.pathname === '/resources') return 'resources'
     return 'home'
   }
   const [view, setView] = useState(getViewFromPath)
@@ -307,10 +317,17 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const navigateResources = () => {
+    setView('resources')
+    window.history.pushState({}, '', '/resources')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   const renderView = () => {
     if (view === 'experience') return <Exp />
     if (view === 'project') return <Project />
     if (view === 'playground') return <PythonPlayground />
+    if (view === 'resources') return <Resources />
     return <PortfolioHome />
   }
 
@@ -323,6 +340,7 @@ function App() {
         onNavigateExperience={navigateExperience}
         onNavigatePlayground={navigatePlayground}
         onNavigateProject={navigateProject}
+        onNavigateResources={navigateResources}
       />
       {renderView()}
       <ContactSection />
