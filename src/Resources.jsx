@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './Resources.css'
 
-const downloadBaseUrl = 'https://smegkeatw4.execute-api.us-east-1.amazonaws.com/download'
+const downloadBaseUrl = 'https://24r4ihsr1l.execute-api.ap-east-1.amazonaws.com/download'
 
 function Resources() {
   const [code, setCode] = useState('')
