@@ -167,11 +167,13 @@
 }
 
 .login-message {
+  width: 100%;
   margin-top: 16px;
   color: var(--accent-strong);
   font-size: 0.9rem;
   font-weight: 700;
   line-height: 1.5;
+  text-align: center;
 }
 
 .login-message.error {
