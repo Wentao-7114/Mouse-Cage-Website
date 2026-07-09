@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react'
+import { fetchUserAttributes, signOut } from 'aws-amplify/auth'
 import { FaArrowRight, FaGithub, FaLinkedin } from 'react-icons/fa'
 import { MdEmail } from 'react-icons/md'
 import './App.css'
 import Exp from './Exp'
+import LoginPage from './LoginPage'
 import PythonPlayground from './PythonPlayground'
 import Project from './Project'
 import Resources from './Resources'
+import SignupPage from './SignupPage'
+import dataIcon from './assets/data-icon.svg'
+import programmingIcon from './assets/programming-icon.svg'
 import riceLogo from './assets/Rice_Logo.png'
+import toolsIcon from './assets/tools-icon.svg'
 import uiucLogo from './assets/UIUC_Logo_1.png'
 
-const emailAddress = 'wz67@rice.edu'
+const emailAddress = 'wentao@mousecage.net'
 const emailSubject = 'Portfolio Contact'
 const emailBody = 'Hi Wentao,%0D%0A%0D%0AI found your portfolio and wanted to contact you.'
 
@@ -19,14 +25,17 @@ const skills = [
   {
     title: 'Languages',
     text: 'Python, C/C++, T-SQL, VBA, MySQL, TypeScript, JavaScript, HTML/CSS, Java.',
+    icon: programmingIcon,
   },
   {
     title: 'Frameworks & Data',
     text: 'React, Node.js/Express, MS SQL Server, SQL Server Integration Services.',
+    icon: dataIcon,
   },
   {
     title: 'Developer Tools',
     text: 'Git, MS Excel, Visual Studio, Docker, Google Cloud Platform, VS Code, PyCharm, IntelliJ.',
+    icon: toolsIcon,
   },
 ]
 
@@ -90,6 +99,9 @@ function SiteHeader({
   onNavigatePlayground,
   onNavigateProject,
   onNavigateResources,
+  onNavigateLogin,
+  userEmail,
+  onLogout,
 }) {
   return (
     <header className="site-header">
@@ -134,6 +146,22 @@ function SiteHeader({
         <button type="button" onClick={onNavigateContact}>
           Contact
         </button>
+        <span className={`nav-user-email${userEmail ? '' : ' signed-out'}`}>
+          {userEmail || 'Please log in first!'}
+        </span>
+        {userEmail ? (
+          <button className="login-nav-button" type="button" onClick={onLogout}>
+            Log out
+          </button>
+        ) : (
+          <button
+            className={`login-nav-button${currentView === 'login' ? ' active' : ''}`}
+            type="button"
+            onClick={onNavigateLogin}
+          >
+            Log in
+          </button>
+        )}
       </nav>
     </header>
   )
@@ -244,7 +272,9 @@ function PortfolioHome() {
         <div className="card-grid">
           {skills.map((skill) => (
             <article className="info-card" key={skill.title}>
-              <div className="card-icon"></div>
+              <div className="card-icon" aria-hidden="true">
+                <img src={skill.icon} alt="" />
+              </div>
               <h3>{skill.title}</h3>
               <p>{skill.text}</p>
             </article>
@@ -263,13 +293,44 @@ function App() {
     if (window.location.pathname === '/playground') return 'playground'
     if (window.location.pathname === '/project') return 'project'
     if (window.location.pathname === '/resources') return 'resources'
+    if (window.location.pathname === '/login') return 'login'
+    if (window.location.pathname === '/signup') return 'signup'
     return 'home'
   }
   const [view, setView] = useState(getViewFromPath)
+  const [signupDetails, setSignupDetails] = useState(() => window.history.state || {})
+  const [userEmail, setUserEmail] = useState('')
+  const [isAuthReady, setIsAuthReady] = useState(false)
+  const [loginNotice, setLoginNotice] = useState('')
 
   useEffect(() => {
-    const handlePopState = () => {
+    const restoreSession = async () => {
+      let restoredEmail = ''
+
+      try {
+        const attributes = await fetchUserAttributes()
+        restoredEmail = attributes.email || ''
+        setUserEmail(restoredEmail)
+      } catch {
+        setUserEmail('')
+      } finally {
+        setIsAuthReady(true)
+
+        if (!restoredEmail && window.location.pathname === '/resources') {
+          setLoginNotice('Please log in first to access Resources.')
+          setView('login')
+          window.history.replaceState({}, '', '/login')
+        }
+      }
+    }
+
+    restoreSession()
+  }, [])
+
+  useEffect(() => {
+    const handlePopState = (event) => {
       setView(getViewFromPath())
+      setSignupDetails(event.state || {})
     }
 
     window.addEventListener('popstate', handlePopState)
@@ -318,16 +379,80 @@ function App() {
   }
 
   const navigateResources = () => {
+    if (!userEmail) {
+      setLoginNotice('Please log in first to access Resources.')
+      setView('login')
+      window.history.pushState({}, '', '/login')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+
     setView('resources')
     window.history.pushState({}, '', '/resources')
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const navigateLogin = () => {
+    setLoginNotice('')
+    setView('login')
+    window.history.pushState({}, '', '/login')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const navigateSignup = (details = {}) => {
+    setSignupDetails(details)
+    setView('signup')
+    window.history.pushState(details, '', '/signup')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleLoginSuccess = (email) => {
+    setLoginNotice('')
+    setUserEmail(email)
+    setView('home')
+    window.history.replaceState({}, '', '/')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleLogout = async () => {
+    try {
+      await signOut()
+    } finally {
+      setUserEmail('')
+      setView('home')
+      window.history.pushState({}, '', '/')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }
 
   const renderView = () => {
     if (view === 'experience') return <Exp />
     if (view === 'project') return <Project />
     if (view === 'playground') return <PythonPlayground />
-    if (view === 'resources') return <Resources />
+    if (view === 'resources') {
+      if (!isAuthReady || !userEmail) return null
+      return <Resources />
+    }
+    if (view === 'login') {
+      return (
+        <LoginPage
+          key="login"
+          initialMessage={loginNotice}
+          onLogin={handleLoginSuccess}
+          onNavigateSignup={navigateSignup}
+        />
+      )
+    }
+    if (view === 'signup') {
+      return (
+        <SignupPage
+          key="signup"
+          initialEmail={signupDetails.email}
+          startInConfirmation={signupDetails.confirmationRequired}
+          onNavigateLogin={navigateLogin}
+        />
+      )
+    }
     return <PortfolioHome />
   }
 
@@ -341,6 +466,9 @@ function App() {
         onNavigatePlayground={navigatePlayground}
         onNavigateProject={navigateProject}
         onNavigateResources={navigateResources}
+        onNavigateLogin={navigateLogin}
+        userEmail={userEmail}
+        onLogout={handleLogout}
       />
       {renderView()}
       <ContactSection />

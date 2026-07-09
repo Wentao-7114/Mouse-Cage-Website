@@ -78,11 +78,38 @@
     background 180ms ease;
 }
 
+.nav-user-email {
+  width: 180px;
+  padding: 8px 8px 8px 12px;
+  overflow: hidden;
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-user-email.signed-out {
+  color: var(--muted);
+}
+
 .nav-links a:hover,
 .nav-links button:hover,
 .nav-links button.active {
   color: var(--accent-strong);
   background: var(--accent-bg);
+}
+
+.nav-links .login-nav-button {
+  min-width: 78px;
+  color: #ffffff;
+  background: var(--accent);
+}
+
+.nav-links .login-nav-button:hover,
+.nav-links .login-nav-button.active {
+  color: #ffffff;
+  background: var(--accent-strong);
 }
 
 .hero-section {
@@ -329,13 +356,22 @@
 }
 
 .card-icon {
+  display: grid;
   width: 42px;
   height: 42px;
   margin-bottom: 24px;
+  place-items: center;
   border-radius: 14px;
   background:
     linear-gradient(135deg, rgba(74, 137, 179, 0.18), rgba(255, 255, 255, 0.2)),
     var(--accent-bg);
+}
+
+.card-icon img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  opacity: 0.72;
 }
 
 .info-card h3 {
