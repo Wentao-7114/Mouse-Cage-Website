@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { fetchAuthSession } from 'aws-amplify/auth'
 import './Resources.css'
 
 const downloadBaseUrl = 'https://24r4ihsr1l.execute-api.ap-east-1.amazonaws.com/download'
@@ -24,7 +25,19 @@ function Resources() {
     setMessage('')
 
     try {
-      const response = await fetch(downloadUrl)
+      const session = await fetchAuthSession()
+      const accessToken = session.tokens?.accessToken?.toString()
+
+      if (!accessToken) {
+        setMessage('Please log in again before downloading this resource.')
+        return
+      }
+
+      const response = await fetch(downloadUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
       const result = await response.json()
 
       if (result.url) {
